@@ -7,6 +7,7 @@
  */
 
 use Lvinkim\SwimKernel\Tests\App\Action\IndexAction;
+use Lvinkim\SwimKernel\Tests\App\Action\SlimAction;
 use Lvinkim\SwimKernel\Tests\App\Action\UpdateAction;
 use Slim\App;
 
@@ -22,5 +23,6 @@ use Slim\App;
 
     $app->any("/", IndexAction::class);
     $app->any("/update", UpdateAction::class);
+    $app->any("/slim", SlimAction::class);
 
 })($container);
