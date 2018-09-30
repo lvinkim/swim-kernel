@@ -2,9 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: lvinkim
- * Date: 24/09/2018
- * Time: 6:22 PM
+ * Date: 30/09/2018
+ * Time: 10:53 PM
  */
+
+use Symfony\Component\Console\Input\ArrayInput;
 
 require dirname(__DIR__) . "/../../vendor/autoload.php";
 
@@ -14,4 +16,6 @@ $kernel = new \Lvinkim\SwimKernel\Kernel($settings);
 
 $console = new \Lvinkim\SwimKernel\Console($kernel);
 
-$console->run();
+$commandInput = new ArrayInput(['command' => "slim:run"]);
+
+$console->run($commandInput);

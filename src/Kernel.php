@@ -18,6 +18,7 @@ use Swoole\Table;
 
 class Kernel implements KernelInterface
 {
+    const VERSION = "v0.1.0";
 
     private $settings;
 

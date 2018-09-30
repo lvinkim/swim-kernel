@@ -27,15 +27,21 @@ class PhpErrorHandler implements ServiceInterface
 
     public function __invoke(Request $request, Response $response, \Throwable $throwable)
     {
-        $this->logger->log('php-error', ['error' => $throwable->getMessage()], 'error');
+        $this->logger->log("php-error", [
+            "code" => $throwable->getCode(),
+            "message" => $throwable->getMessage(),
+            "file" => $throwable->getFile(),
+            "line" => $throwable->getLine(),
+            "trace" => $throwable->getTrace(),
+        ], "error");
 
         return $response->withStatus(500)
-            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+            ->withHeader("Content-Type", "application/json;charset=utf-8")
             ->write(json_encode([
-                'success' => false,
-                'message' => '500 PHP Error',
-                'data' => [
-                    'error' => $throwable->getMessage()
+                "success" => false,
+                "message" => "500 PHP Error",
+                "data" => [
+                    "error" => $throwable->getMessage()
                 ]
             ]));
     }

@@ -27,14 +27,14 @@ class NotFoundHandler implements ServiceInterface
 
     public function __invoke(Request $request, Response $response)
     {
-        $this->logger->log('not-found', ['uri' => $request->getUri()], 'error');
+        $this->logger->log("not-found", ["uri" => $request->getUri()], "error");
 
         return $response->withStatus(404)
-            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+            ->withHeader("Content-Type", "application/json;charset=utf-8")
             ->write(json_encode([
-                'success' => false,
-                'message' => '404 Not Found',
-                'data' => []
+                "success" => false,
+                "message" => "404 Not Found",
+                "data" => []
             ]));
     }
 }

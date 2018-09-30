@@ -26,15 +26,21 @@ class ErrorHandler implements ServiceInterface
 
     public function __invoke(Request $request, Response $response, \Exception $exception)
     {
-        $this->logger->log('error', ['error' => $exception->getMessage()], 'error');
+        $this->logger->log("error", [
+            "code" => $exception->getCode(),
+            "message" => $exception->getMessage(),
+            "file" => $exception->getFile(),
+            "line" => $exception->getLine(),
+            "trace" => $exception->getTrace(),
+        ], "error");
 
         return $response->withStatus(500)
-            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+            ->withHeader("Content-Type", "application/json;charset=utf-8")
             ->write(json_encode([
-                'success' => false,
-                'message' => '500 Error',
-                'data' => [
-                    'error' => $exception->getMessage(),
+                "success" => false,
+                "message" => "500 Error",
+                "data" => [
+                    "error" => $exception->getMessage(),
                 ]
             ]));
     }

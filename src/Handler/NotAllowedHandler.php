@@ -27,14 +27,14 @@ class NotAllowedHandler implements ServiceInterface
 
     public function __invoke(Request $request, Response $response, array $methods)
     {
-        $this->logger->log('not-allowed', ['uri' => $request->getUri(), 'methods' => $methods], 'error');
+        $this->logger->log("not-allowed", ["uri" => $request->getUri(), "methods" => $methods], "error");
 
         return $response->withStatus(405)
-            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+            ->withHeader("Content-Type", "application/json;charset=utf-8")
             ->write(json_encode([
-                'success' => false,
-                'message' => '405 Not Allowed',
-                'data' => $methods
+                "success" => false,
+                "message" => "405 Not Allowed",
+                "data" => $methods
             ]));
     }
 }

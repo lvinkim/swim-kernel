@@ -21,6 +21,7 @@ return (function () {
         "projectDir" => dirname(__DIR__),
         "serviceDir" => dirname(__DIR__) . "/Service",
         "middlewareDir" => dirname(__DIR__) . "/Middleware",
+        "commandDir" => dirname(__DIR__) . "/Command",
         "namespace" => "Lvinkim\SwimKernel\Tests\App",
         "routes" => __DIR__ . "/routes.config.php",
         'logger' => [

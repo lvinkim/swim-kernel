@@ -9,7 +9,6 @@
 namespace Lvinkim\SwimKernel\Processor;
 
 
-use HaydenPierce\ClassFinder\ClassFinder;
 use Lvinkim\SwimKernel\Middleware\AccessMiddleware;
 use Lvinkim\SwimKernel\Service\SwimKernelLogger;
 use Lvinkim\SwimKernel\Handler\ErrorHandler;
@@ -46,9 +45,17 @@ class LoadProcessor
             }
         }
 
+        $kernelServices = $this->getKernelService();
+        foreach ($kernelServices as $id => $kernelService) {
+            StdOutProcessor::writeln("正在注册内核服务 : {$kernelService}");
+            $container[$id] = function (Container $c) use ($kernelService) {
+                return new $kernelService($c);
+            };
+        }
+
         $serviceClasses = $this->getAllServiceClasses($settings);
         foreach ($serviceClasses as $idx => $serviceClass) {
-            StdOutProcessor::writeln("正在注册服务 {$idx}: {$serviceClass}");
+            StdOutProcessor::writeln("正在注册应用服务 {$idx}: {$serviceClass}");
             $container[$serviceClass] = function (Container $c) use ($serviceClass) {
                 return new $serviceClass($c);
             };
@@ -63,17 +70,19 @@ class LoadProcessor
         return $container;
     }
 
-    private function getAllMiddlewareClasses($settings)
+
+    /**
+     * @return array
+     */
+    private function getKernelService()
     {
-        $kernelMiddleware = [
-            AccessMiddleware::class,
+        return [
+            SwimKernelLogger::class => SwimKernelLogger::class,
+            "errorHandler" => ErrorHandler::class,
+            "phpErrorHandler" => PhpErrorHandler::class,
+            "notAllowedHandler" => NotAllowedHandler::class,
+            "notFoundHandler" => NotFoundHandler::class,
         ];
-
-        $serviceDir = $settings["middlewareDir"];
-        $namespace = $settings["namespace"] . "\Middleware";
-        $appMiddleware = $this->getClassesRecursion($serviceDir, $namespace);
-
-        return array_merge($kernelMiddleware, $appMiddleware);
     }
 
     /**
@@ -82,41 +91,29 @@ class LoadProcessor
      */
     private function getAllServiceClasses($settings)
     {
-        $kernelServices = [
-            SwimKernelLogger::class,
-            ErrorHandler::class,
-            PhpErrorHandler::class,
-            NotAllowedHandler::class,
-            NotFoundHandler::class,
-        ];
-
         $serviceDir = $settings["serviceDir"];
         $namespace = $settings["namespace"] . "\Service";
-        $appServices = $this->getClassesRecursion($serviceDir, $namespace);
+        $appServices = DirectoryScanner::getClassesRecursion($serviceDir, $namespace);
 
-        return array_merge($kernelServices, $appServices);
+        return $appServices;
     }
 
     /**
-     * @param $directory
-     * @param $namespace
+     * @param $settings
      * @return array
      */
-    private function getClassesRecursion($directory, $namespace)
+    private function getAllMiddlewareClasses($settings)
     {
-        try {
-            $classes = ClassFinder::getClassesInNamespace($namespace);
+        $kernelMiddleware = [
+            AccessMiddleware::class,
+        ];
 
-            $subDirectories = DirectoryScanner::scanChildNamespaces($directory);
-            foreach ($subDirectories as $subDirectory) {
-                $subClasses = ClassFinder::getClassesInNamespace($namespace . $subDirectory);
-                $classes = array_merge($classes, $subClasses);
-            }
-        } catch (\Exception $exception) {
-            $classes = [];
-        }
+        $serviceDir = $settings["middlewareDir"];
+        $namespace = $settings["namespace"] . "\Middleware";
+        $appMiddleware = DirectoryScanner::getClassesRecursion($serviceDir, $namespace);
 
-        return $classes;
+        return array_merge($kernelMiddleware, $appMiddleware);
     }
+
 
 }
