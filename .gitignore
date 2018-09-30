@@ -1,0 +1,14 @@
+/*
+
+!.gitignore
+
+!/src/
+!/tests/
+!/var/
+
+!.env.dist
+!composer.json
+!docker-compose.yml
+!LICENSE
+!README.md
+!xdebug.disable.ini

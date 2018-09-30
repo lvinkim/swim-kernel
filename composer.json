@@ -1,0 +1,32 @@
+{
+  "name": "lvinkim/swim-kernel",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vinkim Lee",
+      "email": "lee.vinkim@yahoo.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "slim/slim": "^3.11",
+    "symfony/console": "^4.1",
+    "vlucas/phpdotenv": "^2.5",
+    "monolog/monolog": "^1.23",
+    "haydenpierce/class-finder": "^0.2.0"
+  },
+  "require-dev": {
+    "swoft/swoole-ide-helper": "dev-master",
+    "phpunit/phpunit": "^6.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lvinkim\\SwimKernel\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Lvinkim\\SwimKernel\\Tests\\": "tests/"
+    }
+  }
+}
