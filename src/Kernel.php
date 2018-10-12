@@ -61,7 +61,13 @@ class Kernel implements KernelInterface
 
         if (!$actionResponse->isSent()) {
             $response->header("Content-Type", $actionResponse->getContentType());
-            $response->end($actionResponse->getBody());
+
+            $contentBlocks = str_split($actionResponse->getBody(), 2046 * 1024);
+            foreach ($contentBlocks as $block) {
+                $response->write($block);
+            }
+
+            $response->end();
         }
     }
 
